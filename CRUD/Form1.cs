@@ -1,17 +1,14 @@
 using System.Security.Policy;
+using System.Data.OracleClient;
+using Oracle.ManagedDataAccess.Client;
 
 namespace CRUD
 {
     public partial class Form1 : Form
     {
+      readonly string auth = "Data Source=localhost;User Id=system;Password=peixe;";
 
-        Usuario[] usuarios = new Usuario[]
-        {
-           new Usuario("Rubens", "rubiinho@live.it", 29132295, 12323696),
-           new Usuario("Valdir", "valdir@live.it", 29222995, 232323112)
-
-    };
-
+     
         public Form1()
         {
             InitializeComponent();
@@ -21,26 +18,29 @@ namespace CRUD
         {
             components = new System.ComponentModel.Container();
             button1 = new Button();
-            button2 = new Button();
             button3 = new Button();
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
-            maskedTextBox2 = new MaskedTextBox();
-            maskedTextBox1 = new MaskedTextBox();
+            phoneValue = new MaskedTextBox();
+            dataValue = new MaskedTextBox();
+            button2 = new Button();
+            idadeValue = new NumericUpDown();
+            label7 = new Label();
             label4 = new Label();
             label3 = new Label();
-            textBox2 = new TextBox();
+            emailValue = new TextBox();
             label2 = new Label();
-            textBox1 = new TextBox();
+            nomeValue = new TextBox();
             label1 = new Label();
             groupBox2 = new GroupBox();
             label6 = new Label();
             label5 = new Label();
-            textBox4 = new TextBox();
-            textBox3 = new TextBox();
+            emailFilter = new TextBox();
+            nomeFilter = new TextBox();
             bindingSource1 = new BindingSource(components);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)idadeValue).BeginInit();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             SuspendLayout();
@@ -53,29 +53,16 @@ namespace CRUD
             button1.TabIndex = 0;
             button1.Text = "Carregar";
             button1.UseVisualStyleBackColor = true;
-            button1.UseWaitCursor = true;
             button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button2.Location = new Point(194, 144);
-            button2.Name = "button2";
-            button2.Size = new Size(71, 28);
-            button2.TabIndex = 1;
-            button2.Text = "Criar";
-            button2.UseVisualStyleBackColor = false;
-            button2.UseWaitCursor = true;
             // 
             // button3
             // 
-            button3.Location = new Point(37, 140);
+            button3.Location = new Point(64, 136);
             button3.Name = "button3";
             button3.Size = new Size(93, 29);
             button3.TabIndex = 1;
             button3.Text = "Procurar";
             button3.UseVisualStyleBackColor = true;
-            button3.UseWaitCursor = true;
             // 
             // dataGridView1
             // 
@@ -84,45 +71,70 @@ namespace CRUD
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(459, 123);
             dataGridView1.TabIndex = 2;
-            dataGridView1.UseWaitCursor = true;
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(maskedTextBox2);
-            groupBox1.Controls.Add(maskedTextBox1);
+            groupBox1.Controls.Add(phoneValue);
+            groupBox1.Controls.Add(dataValue);
+            groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(idadeValue);
+            groupBox1.Controls.Add(label7);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(textBox2);
+            groupBox1.Controls.Add(emailValue);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(textBox1);
+            groupBox1.Controls.Add(nomeValue);
             groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(button2);
             groupBox1.Location = new Point(18, 190);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(283, 192);
+            groupBox1.Size = new Size(283, 177);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Usuário";
-            groupBox1.UseWaitCursor = true;
             // 
-            // maskedTextBox2
+            // phoneValue
             // 
-            maskedTextBox2.Location = new Point(139, 112);
-            maskedTextBox2.Mask = "(999) 000-0000";
-            maskedTextBox2.Name = "maskedTextBox2";
-            maskedTextBox2.Size = new Size(126, 23);
-            maskedTextBox2.TabIndex = 4;
-            maskedTextBox2.UseWaitCursor = true;
+            phoneValue.Location = new Point(139, 114);
+            phoneValue.Mask = "(00) 00000-0000";
+            phoneValue.Name = "phoneValue";
+            phoneValue.Size = new Size(126, 23);
+            phoneValue.TabIndex = 7;
             // 
-            // maskedTextBox1
+            // dataValue
             // 
-            maskedTextBox1.Location = new Point(139, 83);
-            maskedTextBox1.Mask = "00/00/0000";
-            maskedTextBox1.Name = "maskedTextBox1";
-            maskedTextBox1.Size = new Size(126, 23);
-            maskedTextBox1.TabIndex = 4;
-            maskedTextBox1.UseWaitCursor = true;
-            maskedTextBox1.ValidatingType = typeof(DateTime);
+            dataValue.Location = new Point(139, 84);
+            dataValue.Mask = "00/00/0000";
+            dataValue.Name = "dataValue";
+            dataValue.Size = new Size(126, 23);
+            dataValue.TabIndex = 7;
+            dataValue.ValidatingType = typeof(DateTime);
+            // 
+            // button2
+            // 
+            button2.Location = new Point(200, 145);
+            button2.Name = "button2";
+            button2.Size = new Size(66, 26);
+            button2.TabIndex = 6;
+            button2.Text = "Criar";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // idadeValue
+            // 
+            idadeValue.Location = new Point(139, 142);
+            idadeValue.Name = "idadeValue";
+            idadeValue.Size = new Size(49, 23);
+            idadeValue.TabIndex = 5;
+            idadeValue.Value = new decimal(new int[] { 18, 0, 0, 0 });
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 11F);
+            label7.Location = new Point(13, 140);
+            label7.Name = "label7";
+            label7.Size = new Size(47, 20);
+            label7.TabIndex = 2;
+            label7.Text = "Idade";
             // 
             // label4
             // 
@@ -133,7 +145,6 @@ namespace CRUD
             label4.Size = new Size(62, 20);
             label4.TabIndex = 2;
             label4.Text = "Contato";
-            label4.UseWaitCursor = true;
             // 
             // label3
             // 
@@ -144,15 +155,13 @@ namespace CRUD
             label3.Size = new Size(124, 20);
             label3.TabIndex = 2;
             label3.Text = "Data Nascimento";
-            label3.UseWaitCursor = true;
             // 
-            // textBox2
+            // emailValue
             // 
-            textBox2.Location = new Point(139, 53);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(126, 23);
-            textBox2.TabIndex = 3;
-            textBox2.UseWaitCursor = true;
+            emailValue.Location = new Point(139, 53);
+            emailValue.Name = "emailValue";
+            emailValue.Size = new Size(126, 23);
+            emailValue.TabIndex = 3;
             // 
             // label2
             // 
@@ -163,15 +172,13 @@ namespace CRUD
             label2.Size = new Size(46, 20);
             label2.TabIndex = 2;
             label2.Text = "Email";
-            label2.UseWaitCursor = true;
             // 
-            // textBox1
+            // nomeValue
             // 
-            textBox1.Location = new Point(139, 24);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(126, 23);
-            textBox1.TabIndex = 3;
-            textBox1.UseWaitCursor = true;
+            nomeValue.Location = new Point(139, 24);
+            nomeValue.Name = "nomeValue";
+            nomeValue.Size = new Size(126, 23);
+            nomeValue.TabIndex = 3;
             // 
             // label1
             // 
@@ -182,22 +189,20 @@ namespace CRUD
             label1.Size = new Size(50, 20);
             label1.TabIndex = 2;
             label1.Text = "Nome";
-            label1.UseWaitCursor = true;
             // 
             // groupBox2
             // 
             groupBox2.Controls.Add(label6);
             groupBox2.Controls.Add(label5);
-            groupBox2.Controls.Add(textBox4);
-            groupBox2.Controls.Add(textBox3);
+            groupBox2.Controls.Add(emailFilter);
+            groupBox2.Controls.Add(nomeFilter);
             groupBox2.Controls.Add(button3);
             groupBox2.Location = new Point(311, 190);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(161, 192);
+            groupBox2.Size = new Size(161, 177);
             groupBox2.TabIndex = 4;
             groupBox2.TabStop = false;
             groupBox2.Text = "Filtro";
-            groupBox2.UseWaitCursor = true;
             // 
             // label6
             // 
@@ -207,7 +212,6 @@ namespace CRUD
             label6.Size = new Size(36, 15);
             label6.TabIndex = 3;
             label6.Text = "Email";
-            label6.UseWaitCursor = true;
             // 
             // label5
             // 
@@ -217,23 +221,20 @@ namespace CRUD
             label5.Size = new Size(40, 15);
             label5.TabIndex = 3;
             label5.Text = "Nome";
-            label5.UseWaitCursor = true;
             // 
-            // textBox4
+            // emailFilter
             // 
-            textBox4.Location = new Point(6, 103);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(149, 23);
-            textBox4.TabIndex = 2;
-            textBox4.UseWaitCursor = true;
+            emailFilter.Location = new Point(6, 103);
+            emailFilter.Name = "emailFilter";
+            emailFilter.Size = new Size(149, 23);
+            emailFilter.TabIndex = 2;
             // 
-            // textBox3
+            // nomeFilter
             // 
-            textBox3.Location = new Point(6, 49);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(149, 23);
-            textBox3.TabIndex = 2;
-            textBox3.UseWaitCursor = true;
+            nomeFilter.Location = new Point(6, 49);
+            nomeFilter.Name = "nomeFilter";
+            nomeFilter.Size = new Size(149, 23);
+            nomeFilter.TabIndex = 2;
             // 
             // Form1
             // 
@@ -244,10 +245,10 @@ namespace CRUD
             Controls.Add(button1);
             Name = "Form1";
             Text = "Gerênciador de Dados";
-            UseWaitCursor = true;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)idadeValue).EndInit();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
@@ -255,33 +256,77 @@ namespace CRUD
         }
 
         private Button button1;
-        private Button button2;
         private Button button3;
         private DataGridView dataGridView1;
         private GroupBox groupBox1;
         private Label label4;
         private Label label3;
-        private TextBox textBox2;
+        private TextBox emailValue;
         private Label label2;
-        private TextBox textBox1;
+        private TextBox nomeValue;
         private Label label1;
-
-
-
-        private MaskedTextBox maskedTextBox2;
-        private MaskedTextBox maskedTextBox1;
         private GroupBox groupBox2;
         private Label label6;
         private Label label5;
-        private TextBox textBox4;
-        private TextBox textBox3;
+        private TextBox emailFilter;
+        private TextBox nomeFilter;
         private BindingSource bindingSource1;
         private System.ComponentModel.IContainer components;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            dataGridView1.DataSource = usuarios;
+            List<Usuario> usuarios = new List<Usuario>();
+            dataGridView1.DataSource = null;
+            string query = "SELECT * FROM usuarios";
+
+            using (OracleConnection connection = new OracleConnection(auth))
+            {
+                try
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand(query, connection))
+                    {
+                        using (OracleDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Usuario usuario = new Usuario(
+                                    reader["NOME"].ToString(),
+                                    reader["EMAIL"].ToString(),
+                                    reader["IDADE"].ToString(),
+                                    reader["DATA"].ToString(),
+                                    reader["PHONE"].ToString()
+                                    );
+                                usuarios.Add(usuario);
+                            }
+                        }
+                    }
+                    dataGridView1.DataSource = usuarios;
+                }
+                catch (Exception error)
+                {
+
+                    MessageBox.Show($"Houve um problema ao consultar banco de dados: {error.Message}");
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
+
+        private NumericUpDown idadeValue;
+        private Label label7;
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private MaskedTextBox phoneValue;
+        private MaskedTextBox dataValue;
+        private Button button2;
     }
 
 
@@ -289,15 +334,17 @@ namespace CRUD
     {
         public string Nome { get; set; }
         public string Email { get; set; }
-        public int Phone { get; set; }
-        public int DataNascimento { get; set; }
+        public string Idade { get; set; }
+        public string Phone { get; set; }
+        public string DataNascimento { get; set; }
 
-        public Usuario(string nome, string email, int phone, int datanascimento)
+        public Usuario(string nome, string email, string idade, string phone, string data)
         {
             Nome = nome;
             Email = email;
+            Idade = idade;
             Phone = phone;
-            DataNascimento = datanascimento;
+            DataNascimento = data;
         }
     }
 }
